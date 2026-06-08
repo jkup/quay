@@ -1,0 +1,7 @@
+/target
+**/*.rs.bk
+Cargo.lock.bak
+
+# Quay test fixtures may create these
+node_modules/
+.quay/

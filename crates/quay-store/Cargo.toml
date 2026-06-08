@@ -1,0 +1,10 @@
+[package]
+name = "quay-store"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+quay-core.workspace = true
+anyhow.workspace = true
+tracing.workspace = true

@@ -1,0 +1,22 @@
+[package]
+name = "quay-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "quay"
+path = "src/main.rs"
+
+[dependencies]
+quay-core.workspace = true
+quay-registry.workspace = true
+quay-resolver.workspace = true
+quay-store.workspace = true
+quay-lock.workspace = true
+
+clap.workspace = true
+tokio.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true

@@ -1,0 +1,45 @@
+# Quay — an AI-native, Rust-based alternative to npm (and eventually Node.js).
+#
+# This is a Cargo workspace. Each crate has a single, well-defined responsibility
+# so that AI agents (and humans) can work on one boundary without touching others.
+[workspace]
+resolver = "3"
+members = [
+    "crates/quay-cli",
+    "crates/quay-core",
+    "crates/quay-registry",
+    "crates/quay-resolver",
+    "crates/quay-store",
+    "crates/quay-lock",
+]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/your-org/quay"
+authors = ["The Quay Authors"]
+
+# Shared dependency versions live here; crates opt in via `dep.workspace = true`.
+[workspace.dependencies]
+quay-core = { path = "crates/quay-core" }
+quay-registry = { path = "crates/quay-registry" }
+quay-resolver = { path = "crates/quay-resolver" }
+quay-store = { path = "crates/quay-store" }
+quay-lock = { path = "crates/quay-lock" }
+
+anyhow = "1"
+thiserror = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "stream"] }
+clap = { version = "4", features = ["derive"] }
+semver = { version = "1", features = ["serde"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true
