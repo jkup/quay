@@ -3,10 +3,27 @@
 //! Responsibilities: fetch package metadata (the "packument") and download
 //! version tarballs. It does NOT decide *what* to install — that's the resolver.
 
+use std::future::Future;
+
 use anyhow::Result;
 use serde::Deserialize;
 
 pub const DEFAULT_REGISTRY: &str = "https://registry.npmjs.org";
+
+/// A source of package metadata: anything that can hand back a [`Packument`]
+/// for a package name.
+///
+/// This is the seam the resolver depends on. [`RegistryClient`] is the real,
+/// network-backed implementation; tests provide an in-memory mock so the
+/// resolver can be exercised without touching the network.
+///
+/// The return type is spelled out as `impl Future + Send` (rather than
+/// `async fn`) to avoid the `async_fn_in_trait` lint and to keep the future
+/// `Send`, which callers on multi-threaded executors need.
+pub trait PackageSource {
+    /// Fetch the full metadata document for a package.
+    fn packument(&self, name: &str) -> impl Future<Output = Result<Packument>> + Send;
+}
 
 /// Thin async wrapper over an npm-compatible registry.
 #[derive(Debug, Clone)]
@@ -52,14 +69,6 @@ impl RegistryClient {
         Self::new(DEFAULT_REGISTRY)
     }
 
-    /// Fetch the full metadata document for a package.
-    pub async fn packument(&self, name: &str) -> Result<Packument> {
-        let url = format!("{}/{}", self.base_url, name);
-        tracing::debug!(%url, "fetching packument");
-        let pkg = self.http.get(url).send().await?.error_for_status()?.json().await?;
-        Ok(pkg)
-    }
-
     /// Download a tarball by URL, returning the raw `.tgz` bytes.
     ///
     /// TODO(quay): verify `integrity` before returning; stream to the store
@@ -74,5 +83,15 @@ impl RegistryClient {
             .bytes()
             .await?;
         Ok(bytes.to_vec())
+    }
+}
+
+impl PackageSource for RegistryClient {
+    /// Fetch the full metadata document for a package over HTTP.
+    async fn packument(&self, name: &str) -> Result<Packument> {
+        let url = format!("{}/{}", self.base_url, name);
+        tracing::debug!(%url, "fetching packument");
+        let pkg = self.http.get(url).send().await?.error_for_status()?.json().await?;
+        Ok(pkg)
     }
 }
