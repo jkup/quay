@@ -1,0 +1,38 @@
+name: CI
+
+# The green-bar contract from CLAUDE.md, enforced on every push to main and
+# every pull request. This is the hard gate behind Gas Town's Refinery: code
+# only stays on main if all four checks pass.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  green-bar:
+    name: build / test / clippy / fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # rust-toolchain.toml pins the channel (1.93.1) + clippy/rustfmt
+      # components; `rustup show` installs exactly that on the runner.
+      - name: Install pinned toolchain
+        run: rustup show
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Format
+        run: cargo fmt --all --check
+
+      - name: Build
+        run: cargo build --workspace --all-targets
+
+      - name: Test
+        run: cargo test --workspace
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
