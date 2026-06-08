@@ -91,7 +91,14 @@ impl PackageSource for RegistryClient {
     async fn packument(&self, name: &str) -> Result<Packument> {
         let url = format!("{}/{}", self.base_url, name);
         tracing::debug!(%url, "fetching packument");
-        let pkg = self.http.get(url).send().await?.error_for_status()?.json().await?;
+        let pkg = self
+            .http
+            .get(url)
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await?;
         Ok(pkg)
     }
 }

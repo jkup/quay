@@ -731,6 +731,7 @@ dependencies = [
  "quay-core",
  "quay-registry",
  "semver",
+ "tokio",
  "tracing",
 ]
 

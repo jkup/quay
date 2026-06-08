@@ -21,8 +21,7 @@ impl Store {
 
     /// Default store location, `~/.quay/store`.
     pub fn default_location() -> Result<Self> {
-        let home = std::env::var_os("HOME")
-            .ok_or_else(|| anyhow::anyhow!("HOME is not set"))?;
+        let home = std::env::var_os("HOME").ok_or_else(|| anyhow::anyhow!("HOME is not set"))?;
         Ok(Self::new(Path::new(&home).join(".quay").join("store")))
     }
 

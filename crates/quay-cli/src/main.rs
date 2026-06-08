@@ -12,7 +12,11 @@ use quay_registry::RegistryClient;
 use quay_store::Store;
 
 #[derive(Parser)]
-#[command(name = "quay", version, about = "An AI-native, Rust-based alternative to npm")]
+#[command(
+    name = "quay",
+    version,
+    about = "An AI-native, Rust-based alternative to npm"
+)]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -78,7 +82,10 @@ async fn install() -> Result<()> {
 
 async fn add(packages: Vec<String>) -> Result<()> {
     // TODO(quay) M3: mutate package.json, then re-run install().
-    anyhow::bail!("`quay add {}` not yet implemented (ROADMAP M3)", packages.join(" "))
+    anyhow::bail!(
+        "`quay add {}` not yet implemented (ROADMAP M3)",
+        packages.join(" ")
+    )
 }
 
 fn run_script(script: &str) -> Result<()> {
