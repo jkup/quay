@@ -27,16 +27,17 @@ pub struct LockedPackage {
 impl Lockfile {
     /// Build a lockfile from a solved resolution.
     ///
-    /// TODO(quay) M1: carry tarball URLs + integrity through from the resolver.
+    /// TODO(quay) M1-3: emit the real `resolved`/`integrity` values now carried
+    /// on [`ResolvedPackage`]; for now they stay empty so the format is stable.
     pub fn from_resolution(resolution: &Resolution) -> Self {
         let packages = resolution
             .packages
             .iter()
-            .map(|(key, id)| {
+            .map(|(key, pkg)| {
                 (
                     key.clone(),
                     LockedPackage {
-                        version: id.version.to_string(),
+                        version: pkg.id.version.to_string(),
                         resolved: String::new(),
                         integrity: None,
                     },

@@ -10,3 +10,6 @@ quay-registry.workspace = true
 semver.workspace = true
 anyhow.workspace = true
 tracing.workspace = true
+
+[dev-dependencies]
+tokio.workspace = true

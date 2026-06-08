@@ -109,7 +109,10 @@ mod tests {
         let pkg = source.packument("left-pad").await.unwrap();
         assert_eq!(pkg.name, "left-pad");
         let meta = pkg.versions.get("1.3.0").expect("version present");
-        assert_eq!(meta.dist.tarball, "https://registry.example/left-pad-1.3.0.tgz");
+        assert_eq!(
+            meta.dist.tarball,
+            "https://registry.example/left-pad-1.3.0.tgz"
+        );
 
         // Unknown packages error rather than hitting the network.
         assert!(source.packument("does-not-exist").await.is_err());
