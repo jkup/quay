@@ -30,7 +30,7 @@ The headline feature. Turn version requirements into an exact, pinned graph.
 
 ## M2 — Install to disk (content-addressable store)
 
-- [ ] `Store::extract`: verify integrity, unpack `.tgz`, dedupe by content hash.
+- [x] `Store::extract`: verify integrity, unpack `.tgz`, dedupe by content hash.
 - [ ] Link resolved packages into `./node_modules` (hard links from the store).
 - [ ] Reproduce installs from an existing `quay.lock` without re-resolving.
 - [ ] Parallel downloads with a bounded concurrency limit.

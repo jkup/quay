@@ -15,6 +15,16 @@ pub enum Error {
     #[error("invalid version requirement `{0}`: {1}")]
     InvalidVersionReq(String, semver::Error),
 
+    #[error("integrity check failed for `{package}`: expected {expected}, got {actual}")]
+    IntegrityMismatch {
+        package: String,
+        expected: String,
+        actual: String,
+    },
+
+    #[error("malformed integrity string `{0}`: {1}")]
+    MalformedIntegrity(String, String),
+
     #[error("io: {0}")]
     Io(#[from] std::io::Error),
 
